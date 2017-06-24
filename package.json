@@ -1,0 +1,23 @@
+{
+  "name": "bank-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kostyan5/bank-scraper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kostyan5/bank-scraper/issues"
+  },
+  "homepage": "https://github.com/kostyan5/bank-scraper#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "selenium-webdriver": "^3.4.0"
+  }
+}
