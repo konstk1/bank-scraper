@@ -20,7 +20,21 @@ async function login() {
     await driver.findElement(By.name('onlineId1')).sendKeys(process.env.BANK_USERNAME);
     await driver.findElement(By.name('passcode1')).sendKeys(process.env.BANK_PASSWORD);
     await driver.findElement(By.id('hp-sign-in-btn')).click();
-    // await driver.wait(until.elementLocated(By.className('logged-in')), 10000);
+    await driver.wait(until.elementLocated(By.className('AccountName')), 10000);
+    let accountBalanceXPath = "//span[a[@name = 'DDA_SB_details' or @name = 'SDA_SB_details']]/following-sibling::div[1]/span";
+    let list = await driver.findElements(By.xpath(accountBalanceXPath));
+
+    let balances = await Promise.all(list.map( item => {
+        return item.getAttribute('innerHTML');
+    }));
+
+    balances = balances.map( item => {
+        let balanceStr = item.replace(/[,$]/g, "");
+        return parseFloat(balanceStr);
+    });
+
+    console.log(balances);
+
 }
 
 // async function get_followers() {
