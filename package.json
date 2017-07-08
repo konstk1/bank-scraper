@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/kostyan5/bank-scraper#readme",
   "dependencies": {
+    "aws-sdk": "^2.82.0",
     "dotenv": "^4.0.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
     "selenium-webdriver": "^3.4.0"
   }
 }
