@@ -2,6 +2,14 @@
   "extends": "airbnb",
   "rules": {
     "no-console": 0,
-    "func-names": ["error", "never"]
+    "func-names": ["error", "never"],
+    "strict": [2, "global"]
+  },
+  "env": {
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "script"
   }
 }

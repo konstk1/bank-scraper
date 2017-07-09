@@ -1,6 +1,9 @@
 /**
  * Created by Kon on 7/8/17.
  */
+
+'use strict';
+
 const AWS = require('aws-sdk');
 const { Builder, By, until } = require('selenium-webdriver');
 
