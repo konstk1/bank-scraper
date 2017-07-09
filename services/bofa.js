@@ -5,9 +5,13 @@
 'use strict';
 
 const AWS = require('aws-sdk');
+const path = require('path');
 const { Builder, By, until } = require('selenium-webdriver');
 
 const kms = new AWS.KMS();
+// Set up path for phantom
+const phantomPath = path.join(__dirname, '../node_modules/phantomjs/lib/phantom/bin');
+process.env.PATH = `${process.env.PATH}:${phantomPath}`;
 const driver = new Builder().forBrowser('chrome').build();
 
 function getCredential(encrypted) {
@@ -29,7 +33,27 @@ async function login(username, password) {
   await driver.findElement(By.name('onlineId1')).sendKeys(username);
   await driver.findElement(By.name('passcode1')).sendKeys(password);
   await driver.findElement(By.id('hp-sign-in-btn')).click();
-  await driver.wait(until.elementLocated(By.className('AccountName')), 10000);
+  try {
+    const question = await driver.wait(until.elementLocated(By.xpath("//label[contains(@for,'tlpvt-challenge-answer')]")), 5000).getText();
+    let answer = '';
+    if (question.includes('city')) {
+      answer = await getCredential(process.env.BOFA_2FA_QCITY);
+    } else if (question.includes('first pet')) {
+      answer = await getCredential(process.env.BOFA_2FA_QPET);
+    } else if (question.includes('manager')) {
+      answer = await getCredential(process.env.BOFA_2FA_QMGR);
+    } else {
+      console.log('Unknown question');
+    }
+    await driver.findElement(By.name('challengeQuestionAnswer')).sendKeys(answer);
+    await driver.findElement(By.name('challenge-question-submit')).click();
+  } catch (err) {
+    console.log('No challenge question: ', err);
+  }
+  driver.wait(until.elementLocated(By.className('AccountName')), 10000);
+}
+
+async function getBalances() {
   const accountBalanceXPath = "//span[a[@name = 'DDA_SB_details' or @name = 'SDA_SB_details']]/following-sibling::div[1]/span";
   const list = await driver.findElements(By.xpath(accountBalanceXPath));
 
@@ -40,14 +64,16 @@ async function login(username, password) {
     return parseFloat(balanceStr);
   });
 
-  console.log(balances);
+  return balances;
 }
 
-async function run() {
+async function fetchBalances() {
   const username = await getCredential(process.env.BOFA_USERNAME);
   const password = await getCredential(process.env.BOFA_PASS);
-  console.log(`${username} : ${password}`);
   await login(username, password);
+  const balances = getBalances();
+  // driver.quit();
+  return balances;
 }
 
-module.exports.run = run;
+module.exports.fetchBalances = fetchBalances;

@@ -20,6 +20,7 @@
     "aws-sdk": "^2.82.0",
     "dotenv": "^4.0.0",
     "pg": "^6.4.0",
+    "phantomjs": "^2.1.7",
     "selenium-webdriver": "^3.4.0"
   }
 }
