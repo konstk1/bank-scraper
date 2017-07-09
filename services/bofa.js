@@ -12,7 +12,7 @@ const kms = new AWS.KMS();
 // Set up path for phantom
 const phantomPath = path.join(__dirname, '../node_modules/phantomjs/lib/phantom/bin');
 process.env.PATH = `${process.env.PATH}:${phantomPath}`;
-const driver = new Builder().forBrowser('chrome').build();
+const driver = new Builder().forBrowser('phantomjs').build();
 
 function getCredential(encrypted) {
   return new Promise((resolve, reject) => {
@@ -34,7 +34,8 @@ async function login(username, password) {
   await driver.findElement(By.name('passcode1')).sendKeys(password);
   await driver.findElement(By.id('hp-sign-in-btn')).click();
   try {
-    const question = await driver.wait(until.elementLocated(By.xpath("//label[contains(@for,'tlpvt-challenge-answer')]")), 5000).getText();
+    console.log('Answering question');
+    const question = await driver.wait(until.elementLocated(By.xpath("//label[contains(@for,'tlpvt-challenge-answer')]")), 5000).getAttribute('textContent');
     let answer = '';
     if (question.includes('city')) {
       answer = await getCredential(process.env.BOFA_2FA_QCITY);
@@ -43,14 +44,17 @@ async function login(username, password) {
     } else if (question.includes('manager')) {
       answer = await getCredential(process.env.BOFA_2FA_QMGR);
     } else {
-      console.log('Unknown question');
+      console.log('Unknown question: ', question);
+      console.log(await driver.getPageSource());
     }
     await driver.findElement(By.name('challengeQuestionAnswer')).sendKeys(answer);
+    await driver.findElement(By.id('no-recognize')).click();
+    console.log('Don\'t remember');
     await driver.findElement(By.name('challenge-question-submit')).click();
   } catch (err) {
     console.log('No challenge question: ', err);
   }
-  driver.wait(until.elementLocated(By.className('AccountName')), 10000);
+  await driver.wait(until.elementLocated(By.className('AccountName')), 10000);
 }
 
 async function getBalances() {
@@ -72,7 +76,7 @@ async function fetchBalances() {
   const password = await getCredential(process.env.BOFA_PASS);
   await login(username, password);
   const balances = getBalances();
-  // driver.quit();
+  driver.quit();
   return balances;
 }
 
