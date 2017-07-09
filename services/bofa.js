@@ -48,11 +48,16 @@ async function login(username, password) {
       console.log(await driver.getPageSource());
     }
     await driver.findElement(By.name('challengeQuestionAnswer')).sendKeys(answer);
-    await driver.findElement(By.id('no-recognize')).click();
-    console.log('Don\'t remember');
+    try {
+      await driver.findElement(By.id('no-recognize')).click();
+      console.log('Don\'t remember');
+    } catch (err) {
+      console.log('No don\'t remember button');
+    }
+    console.log('Submitting');
     await driver.findElement(By.name('challenge-question-submit')).click();
   } catch (err) {
-    console.log('No challenge question: ', err);
+    console.log('Error in challenge page: ', err);
   }
   await driver.wait(until.elementLocated(By.className('AccountName')), 10000);
 }
@@ -75,7 +80,7 @@ async function fetchBalances() {
   const username = await getCredential(process.env.BOFA_USERNAME);
   const password = await getCredential(process.env.BOFA_PASS);
   await login(username, password);
-  const balances = getBalances();
+  const balances = await getBalances();
   driver.quit();
   return balances;
 }

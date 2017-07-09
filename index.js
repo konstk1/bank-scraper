@@ -13,8 +13,7 @@ exports.handler = async (event, context, callback) => {
     const balances = await bofa.fetchBalances();
     console.log(balances);
     await BalanceDAO.insertBalance(balances[0], balances[1], balances[2], 0, new Date());
-    console.log(await BalanceDAO.currentBalance());
-    callback(null);
+    callback(null, balances);
   } catch (err) {
     console.log(`Error: ${err}`);
     callback(err);
