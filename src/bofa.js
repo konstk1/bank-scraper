@@ -11,14 +11,14 @@ const s3 = require('./s3');
 
 const kms = new AWS.KMS();
 // Set up path for phantom
-const phantomPath = path.join(__dirname, '../bin');
+const phantomPath = path.join(__dirname, '../node_modules/.bin');
 process.env.PATH = `${process.env.PATH}:${phantomPath}`;
 const driver = new Builder().forBrowser('phantomjs').build();
 
 async function takeScreenshot(filename) {
-  const image = await driver.takeScreenshot();
+  // const image = await driver.takeScreenshot();
   // await require('fs').writeFile(filename, image, 'base64');
-  await s3.saveToS3(image, filename);
+  // await s3.saveToS3(image, filename);
 }
 
 function getCredential(encrypted) {
@@ -36,7 +36,9 @@ function getCredential(encrypted) {
 }
 
 async function login(username, password) {
+  console.log('Loading BofA website');
   await driver.get('https://www.bankofamerica.com/');
+  console.log('Logging in');
   // driver.switchTo().window(driver.getWindowHandle());     // bring window to front
   await driver.findElement(By.name('onlineId1')).sendKeys(username);
   await driver.findElement(By.name('passcode1')).sendKeys(password);
@@ -93,7 +95,7 @@ async function fetchBalances() {
   const password = await getCredential(process.env.BOFA_PASS);
   await login(username, password);
   const balances = await getBalances();
-  driver.quit();
+  await driver.quit();
   return balances;
 }
 

@@ -37,9 +37,11 @@ module.exports = class BalanceDAO {
           timestamp,
         ]);
     } catch (err) {
+      await pool.end();
       console.log(['Error: ', err]);
       return false;
     }
+    await pool.end();
     return result;
   }
 

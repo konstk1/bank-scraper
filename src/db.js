@@ -31,6 +31,8 @@ pool.on('error', (err, client) => {
 // export the query method for passing queries to the pool
 module.exports.query = (text, values, callback) => pool.query(text, values, callback);
 
+module.exports.end = () => pool.end();
+
 // the pool also supports checking out a client for
 // multiple operations, such as a transaction
 module.exports.connect = callback => pool.connect(callback);
