@@ -4,7 +4,7 @@
 
 'use strict';
 
-const pool = require('../services/db');
+const pool = require('./db');
 
 module.exports = class BalanceDAO {
 

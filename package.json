@@ -1,26 +1,21 @@
 {
   "name": "bank-scraper",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "BofA scraper",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "echo deploy"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kostyan5/bank-scraper.git"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kostyan5/bank-scraper/issues"
-  },
-  "homepage": "https://github.com/kostyan5/bank-scraper#readme",
+  "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.82.0",
     "dotenv": "^4.0.0",
     "pg": "^6.4.0",
-    "phantomjs": "^2.1.7",
     "selenium-webdriver": "^3.4.0"
-  }
+  },
+  "devDependencies": {}
 }
