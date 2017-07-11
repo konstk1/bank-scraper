@@ -8,6 +8,12 @@ const AWS = require('aws-sdk');
 const path = require('path');
 const { Builder, By, until } = require('selenium-webdriver');
 const s3 = require('./s3');
+const fs = require('fs');
+
+const screensDir = 'screens';
+if (!fs.existsSync(screensDir)) {
+  fs.mkdirSync('screens');
+}
 
 const kms = new AWS.KMS();
 // Set up path for phantom
@@ -16,8 +22,9 @@ process.env.PATH = `${process.env.PATH}:${phantomPath}`;
 const driver = new Builder().forBrowser('phantomjs').build();
 
 async function takeScreenshot(filename) {
-  // const image = await driver.takeScreenshot();
-  // await require('fs').writeFile(filename, image, 'base64');
+  const image = await driver.takeScreenshot();
+  const screenFilename = `${screensDir}/${filename}`;
+  await fs.writeFileSync(screenFilename, image, 'base64');
   // await s3.saveToS3(image, filename);
 }
 

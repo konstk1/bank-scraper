@@ -4,6 +4,7 @@
   "description": "BofA scraper",
   "main": "index.js",
   "scripts": {
+    "run": "node index.js",
     "deploy": "echo deploy"
   },
   "repository": {
