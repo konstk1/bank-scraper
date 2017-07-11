@@ -27,7 +27,7 @@ module.exports = class BalanceDAO {
             $2::double precision,
             $3::double precision,
             $4::double precision,
-            $5::timestamp without time zone
+            $5::timestamp with time zone
           );
         `, [
           operating,

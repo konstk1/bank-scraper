@@ -1,6 +1,7 @@
 {
   "name": "bank-scraper",
   "version": "1.0.0",
+  "private": true,
   "description": "BofA scraper",
   "main": "index.js",
   "scripts": {
