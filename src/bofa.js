@@ -22,7 +22,7 @@ if (!fs.existsSync(screensDir)) {
 const localBin = path.join(__dirname, '../node_modules/.bin');
 
 process.env.PATH = `${process.env.PATH}:${localBin}`;
-const chromeDataDir = `${process.env.HOME}/.config/google_chrome`;
+const chromeDataDir = `${process.env.HOME}/.config/google-chrome`;
 const driver = new Builder().forBrowser('chrome').setChromeOptions(new chrome.Options().addArguments('headless', `user-data-dir=${chromeDataDir}`)).build();
 
 async function takeScreenshot(filename, notify) {
