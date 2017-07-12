@@ -18,6 +18,7 @@
     "dotenv": "^4.0.0",
     "pg": "^6.4.0",
     "phantomjs-prebuilt": "^2.1.14",
+    "postmark": "^1.4.1",
     "selenium-webdriver": "^3.4.0"
   },
   "devDependencies": {}

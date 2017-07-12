@@ -8,15 +8,16 @@ const AWS = require('aws-sdk');
 const path = require('path');
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
-const s3 = require('./s3');
 const fs = require('fs');
+const email = require('./email');
+
+const kms = new AWS.KMS();
 
 const screensDir = 'screens';
 if (!fs.existsSync(screensDir)) {
   fs.mkdirSync('screens');
 }
 
-const kms = new AWS.KMS();
 // Set up path for local bins (chrome, phantom, etc)
 const localBin = path.join(__dirname, '../node_modules/.bin');
 
@@ -24,12 +25,15 @@ process.env.PATH = `${process.env.PATH}:${localBin}`;
 const chromeDataDir = `${process.env.HOME}/.config/google_chrome`;
 const driver = new Builder().forBrowser('chrome').setChromeOptions(new chrome.Options().addArguments('headless', `user-data-dir=${chromeDataDir}`)).build();
 
-async function takeScreenshot(filename) {
+async function takeScreenshot(filename, notify) {
   const image = await driver.takeScreenshot();
   const screenFilename = `${screensDir}/${filename}`;
   await fs.writeFileSync(screenFilename, image, 'base64');
   await fs.writeFileSync('screens/source.html', await driver.getPageSource());
-  // await s3.saveToS3(image, filename);
+
+  if (notify) {
+    email.notifyError(screenFilename);
+  }
 }
 
 function getCredential(encrypted) {
@@ -56,9 +60,8 @@ async function login(username, password) {
   await driver.findElement(By.id('hp-sign-in-btn')).click();
   try {
     console.log('Answering question');
-    takeScreenshot('login1.png');
+    takeScreenshot('login1.png', false);
     const question = await driver.wait(until.elementLocated(By.xpath("//label[contains(@for,'tlpvt-challenge-answer')]")), 5000).getAttribute('textContent');
-    takeScreenshot('login2.png');
     let answer = '';
     if (question.includes('city')) {
       answer = await getCredential(process.env.BOFA_2FA_QCITY);
@@ -75,14 +78,15 @@ async function login(username, password) {
       await driver.findElement(By.id('no-recognize')).click();
       console.log('Don\'t remember');
     } catch (err) {
-      console.log('No don\'t remember button');
+      console.log('No "remember" option');
     }
+
     console.log('Submitting');
     await driver.findElement(By.name('challenge-question-submit')).click();
   } catch (err) {
     console.log('Error in challenge page: ', err);
     console.log(await driver.getPageSource());
-    takeScreenshot('challange_error.png');
+    takeScreenshot('challange_error.png', true);
   }
   await driver.wait(until.elementLocated(By.className('AccountName')), 10000);
 }
