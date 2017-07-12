@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.82.0",
+    "chromedriver": "^2.30.1",
     "dotenv": "^4.0.0",
     "pg": "^6.4.0",
     "phantomjs-prebuilt": "^2.1.14",
