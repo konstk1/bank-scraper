@@ -60,8 +60,8 @@ async function login(username, password) {
   await driver.findElement(By.id('hp-sign-in-btn')).click();
   try {
     console.log('Answering question');
-    takeScreenshot('login1.png', false);
     const question = await driver.wait(until.elementLocated(By.xpath("//label[contains(@for,'tlpvt-challenge-answer')]")), 5000).getAttribute('textContent');
+    takeScreenshot('question.png', false);
     let answer = '';
     if (question.includes('city')) {
       answer = await getCredential(process.env.BOFA_2FA_QCITY);

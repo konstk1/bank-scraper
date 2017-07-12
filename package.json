@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "run": "node index.js",
-    "deploy": "echo deploy"
+    "deploy-env": "scp .env bank-scraper:/home/kostyan5/bank-scraper"
   },
   "repository": {
     "type": "git",
