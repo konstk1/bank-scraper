@@ -7,6 +7,7 @@
 const AWS = require('aws-sdk');
 const path = require('path');
 const { Builder, By, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 const s3 = require('./s3');
 const fs = require('fs');
 
@@ -16,15 +17,18 @@ if (!fs.existsSync(screensDir)) {
 }
 
 const kms = new AWS.KMS();
-// Set up path for phantom
-const phantomPath = path.join(__dirname, '../node_modules/.bin');
-process.env.PATH = `${process.env.PATH}:${phantomPath}`;
-const driver = new Builder().forBrowser('phantomjs').build();
+// Set up path for local bins (chrome, phantom, etc)
+const localBin = path.join(__dirname, '../node_modules/.bin');
+
+process.env.PATH = `${process.env.PATH}:${localBin}`;
+const chromeDataDir = `${process.env.HOME}/.config/google_chrome`;
+const driver = new Builder().forBrowser('chrome').setChromeOptions(new chrome.Options().addArguments('headless', `user-data-dir=${chromeDataDir}`)).build();
 
 async function takeScreenshot(filename) {
   const image = await driver.takeScreenshot();
   const screenFilename = `${screensDir}/${filename}`;
   await fs.writeFileSync(screenFilename, image, 'base64');
+  await fs.writeFileSync('screens/source.html', await driver.getPageSource());
   // await s3.saveToS3(image, filename);
 }
 
