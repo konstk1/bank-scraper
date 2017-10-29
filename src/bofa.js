@@ -63,12 +63,12 @@ async function login(username, password) {
     const question = await driver.wait(until.elementLocated(By.xpath("//label[contains(@for,'tlpvt-challenge-answer')]")), 5000).getAttribute('textContent');
     takeScreenshot('question.png', false);
     let answer = '';
-    if (question.includes('city')) {
-      answer = await getCredential(process.env.BOFA_2FA_QCITY);
-    } else if (question.includes('first pet')) {
-      answer = await getCredential(process.env.BOFA_2FA_QPET);
-    } else if (question.includes('manager')) {
-      answer = await getCredential(process.env.BOFA_2FA_QMGR);
+    if (question.includes('grew')) {
+      answer = process.env.BOFA_2FA_QENG;
+    } else if (question.includes('girlfriend')) {
+      answer = process.env.BOFA_2FA_QGF;
+    } else if (question.includes('college')) {
+      answer = process.env.BOFA_2FA_QCOL;
     } else {
       console.log('Unknown question: ', question);
       console.log(await driver.getPageSource());
@@ -106,8 +106,8 @@ async function getBalances() {
 }
 
 async function fetchBalances() {
-  const username = await getCredential(process.env.BOFA_USERNAME);
-  const password = await getCredential(process.env.BOFA_PASS);
+  const username = process.env.BOFA_USERNAME;
+  const password = process.env.BOFA_PASS;
   await login(username, password);
   const balances = await getBalances();
   await driver.quit();
