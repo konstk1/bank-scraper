@@ -14,14 +14,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.82.0",
+    "aws-sdk": "^2.141.0",
     "banking": "^1.1.0",
-    "chromedriver": "^2.30.1",
+    "chromedriver": "^2.33.2",
     "dotenv": "^4.0.0",
-    "pg": "^6.4.0",
-    "phantomjs-prebuilt": "^2.1.14",
+    "pg": "^6.4.2",
+    "phantomjs-prebuilt": "^2.1.15",
     "postmark": "^1.4.1",
-    "selenium-webdriver": "^3.4.0"
+    "selenium-webdriver": "^3.6.0"
   },
   "devDependencies": {}
 }

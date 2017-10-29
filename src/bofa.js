@@ -23,7 +23,12 @@ const localBin = path.join(__dirname, '../node_modules/.bin');
 
 process.env.PATH = `${process.env.PATH}:${localBin}`;
 const chromeDataDir = `${process.env.HOME}/.config/google-chrome`;
-const driver = new Builder().forBrowser('chrome').setChromeOptions(new chrome.Options().addArguments('headless', `user-data-dir=${chromeDataDir}`)).build();
+console.log(`Chrome user dir = ${chromeDataDir}`);
+var options = new chrome.Options;
+options.addArguments('headless');
+options.addArguments(`user-data-dir=${chromeDataDir}`);
+options.addArguments('window-size=1200,1100');
+const driver = new Builder().forBrowser('chrome').setChromeOptions(options).build();
 
 async function takeScreenshot(filename, notify) {
   const image = await driver.takeScreenshot();
