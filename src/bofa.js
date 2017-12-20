@@ -62,7 +62,7 @@ async function login(username, password) {
   // driver.switchTo().window(driver.getWindowHandle());     // bring window to front
   await driver.findElement(By.name('onlineId1')).sendKeys(username);
   await driver.findElement(By.name('passcode1')).sendKeys(password);
-  await driver.findElement(By.id('hp-sign-in-btn')).click();
+  await driver.findElement(By.id('signIn')).click();
   try {
     console.log('Answering question');
     const question = await driver.wait(until.elementLocated(By.xpath("//label[contains(@for,'tlpvt-challenge-answer')]")), 5000).getAttribute('textContent');
